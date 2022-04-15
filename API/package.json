@@ -1,0 +1,41 @@
+{
+  "name": "restful-api-node-express",
+  "version": "1.0.0",
+  "description": "Just a boilerplate for starting new projects",
+  "main": "app.js",
+  "auhtor": "Julien Goletto",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "DEBUG=App,Example_Controller,Example_DataMapper,DB_Client,Error_Handler,Router_Wrapper,Validator nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Julien-Goletto/RESTful-API-Node-Express.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Julien-Goletto/RESTful-API-Node-Express/issues"
+  },
+  "homepage": "https://github.com/Julien-Goletto/RESTful-API-Node-Express#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "joi": "^17.6.0",
+    "pg": "^8.7.3",
+    "sanitizer": "^0.1.3",
+    "swagger-jsdoc": "^6.2.0",
+    "swagger-ui-express": "^4.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "pactum": "^3.1.6",
+    "prettier": "^2.6.2"
+  }
+}
