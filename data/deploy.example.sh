@@ -1,20 +1,20 @@
 # Deploy script example
 # Do not forget to make it executable with chmod +x
 
-createuser filmotheque
-createdb filmotheque -O filmotheque
+# createuser ludotheque
+# createdb ludotheque -O ludotheque
 
-export PGUSER='filmotheque'
-export PGDATABASE='filmotheque'
+export PGUSER='ludotheque'
+export PGDATABASE='ludotheque'
 
-sqitch init training_API_scripts --engine-pg
+sqitch init ludotheque --engine pg
 
 sqitch add version_1 -n "structure de base"
 sqitch add version_2 -n "seeding db"
 
 # je revert
-sqitch revert db:pg:filmotheque
+sqitch revert db:pg:ludotheque
 # je deploy
-sqitch deploy db:pg:filmotheque
+sqitch deploy db:pg:ludotheque
 # je verify
-sqitch verify db:pg:filmotheque
+sqitch verify db:pg:ludotheque
