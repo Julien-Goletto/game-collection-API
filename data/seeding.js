@@ -10,77 +10,21 @@ gamesToAdd = [
   {platformId:7,gameTitle:'Kirby and the Forgotten Land'},{platformId:7,gameTitle:'Triangle Strategy'},{platformId:7,gameTitle:'Shin Megami Tensei V'},
 ];
 
-function createInsertSQLQueries(tableName, tableNameList){
-  const query = 
-  `DO
-  $do$
-    DECLARE
-      m varchar;
-      arr varchar[] := array${`['`+ tableNameList.join(`','`)+`']`};
-    BEGIN
-      FOREACH m IN ARRAY arr
-      LOOP
-        INSERT INTO ${tableName}(name)
-        SELECT m
-        WHERE NOT EXISTS (SELECT id from ${tableName} WHERE name=m);
-      END LOOP;
-    END
-  $do$`;
-  return query;
-};
-
-function createInsertSQLQueries2(tableName, tableNameList){
-
-  const firstPart = 
-  `DO
-  $do$
-    DECLARE\n`;
-  const lastPart =
-      `END LOOP;
-    END
-  $do$`;
-
-  let middlePart = '';
-  switch (tableName) {
-    case 'platform':
-    case 'genre':
-      console.log('cas du genre ou de la platform')
-      middlePart +=       `m varchar;
-      arr varchar[] := array${`['`+ tableNameList.join(`','`)+`']`};
-    BEGIN
-      FOREACH m IN ARRAY arr
-      LOOP
-        INSERT INTO ${tableName}(name)
-        SELECT m
-        WHERE NOT EXISTS (SELECT id from ${tableName} WHERE name=m);\n`;
-      break;
-
-    case 'game':
-      let gamesArray = `[`;
-      for (game of tableNameList){
-        gamesArray += `['${game.name}','${game.released}','${game.background_image}'],`
-      }
-      gamesArray = gamesArray.slice(0,-1) + ']';
-      middlePart +=       `m varchar[];
-      arr varchar[] := array${[gamesArray]};
-    BEGIN
-      FOREACH m SLICE 1 IN ARRAY arr
-      LOOP
-        INSERT INTO ${tableName}(name,released_on,background_image)
-        SELECT m[1] m[2] m[3]
-        WHERE NOT EXISTS (SELECT id from ${tableName} WHERE name=m[0]);\n`;
-      break;
-  }
-  return firstPart+middlePart+lastPart;
-};
+function formatSimpleListForPGSql (list){
+  return `['` + `${list.join(`','`)}` + `']`;
+}
+function sanitizeSingleQuotes(string){
+  return string.replace(/'+/g,"''");
+}
 
 function createGlobalInsertQuery(gamesPayloadToInsert){
-  const dataToExtract=['name','released','background_image'];
   
-  let platformsList=[];
-  let genresList=[];
-  let gamesList=[];
-  
+  let platformsList = [];
+  let genresList = [];
+  let formatedGamesList = '';
+  let setGamesPlatformsAndGenresCorrespondances = [];
+
+  // Creating 
   for (const game of gamesPayloadToInsert){
     //Beginning with platformsList
     for (const platform of game.platforms){
@@ -94,13 +38,30 @@ function createGlobalInsertQuery(gamesPayloadToInsert){
         genresList.push(genre);
       };
     };
-    // Then Games lists
-    gamesList.push(Object.fromEntries(Object.entries(game).filter(([key,_]) => dataToExtract.includes(key))));
+    // Formated stringified game objects
+    formatedGamesList += `['${sanitizeSingleQuotes(game.name)}','${game.released}','${game.background_image}'],`;
+    // Formated stringified args for pivot-completing functions
+    setGamesPlatformsAndGenresCorrespondances.push(
+      { gameTitle: sanitizeSingleQuotes(game.name),
+        platforms: game.platforms,
+        genres: game.genres})
   };
-  const insertPlatformsQuery = createInsertSQLQueries2('platform', platformsList);
-  const insertGenresQuery = createInsertSQLQueries2('genre', genresList);
-  const insertGamesQuery = createInsertSQLQueries2('game', gamesList);
-  console.log(insertPlatformsQuery,`\n`,insertGenresQuery,`\n`,insertGamesQuery);
+  // Sringify final lists of platforms and genres to pass them as args to postgresql functions / last touches to other args
+  const formatedGlobalPlatformsList = formatSimpleListForPGSql(platformsList);
+  const formatedGlobalGenresList = formatSimpleListForPGSql(genresList);
+  formatedGamesList = '[' + formatedGamesList.slice(0,-1) + ']';
+  // Create sql queries usings postgresql previously declared functions
+  const insertNewPlatforms = `SELECT add_new_platforms(array${formatedGlobalPlatformsList});`;
+  const insertNewGenres = `SELECT add_new_genres(array${formatedGlobalGenresList});`;
+  const insertNewGames = `SELECT add_new_games(array${formatedGamesList});`;
+  let setGamesPlatforms=``
+  let setGamesGenres=``
+  for (game of setGamesPlatformsAndGenresCorrespondances){
+    setGamesPlatforms += `SELECT game_to_platforms('${game.gameTitle}', array${formatSimpleListForPGSql(game.platforms)});\n`
+    setGamesGenres += `SELECT game_to_genres('${game.gameTitle}', array${formatSimpleListForPGSql(game.genres)});\n`
+  }
+  // console.log(formatedPlatformsList,`\n`,formatedGenresList);
+  console.log(setGamesPlatforms + `\n` + setGamesGenres);
 };
 
 const gamesPayloadToInsert = [
@@ -334,3 +295,19 @@ createGlobalInsertQuery(gamesPayloadToInsert);
 
 // RAWG.createGamesPayload(RAWG_API_KEY, gamesToAdd)
 //   .then(results => console.log("résultat final après appel de fonction", results));
+
+//ADD SQL function
+// CREATE FUNCTION addGenres(arr TEXT[]) RETURNS void AS $$
+// 		DECLARE
+// 			m TEXT;
+// 		BEGIN
+// 			FOREACH m IN ARRAY arr
+// 			LOOP
+// 			  INSERT INTO platform(name)
+// 			  SELECT m
+// 			  WHERE NOT EXISTS (SELECT id from platform WHERE name=m);
+// 			END LOOP;
+//     	END
+// $$ LANGUAGE plpgsql;
+
+// SELECT addGenres(array['Nintendo Switch','PC','Xbox One','PlayStation 4','macOS','Linux','PS Vita','iOS','Xbox 360','PlayStation 3','Xbox Series S/X','PlayStation 5','Wii U','Android']);
