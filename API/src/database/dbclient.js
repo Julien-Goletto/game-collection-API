@@ -1,8 +1,8 @@
 const {Pool} = require('pg');
 const debug = require('debug')('DB_Client');
 
-const { DB_NAME, DB_USER, DB_HOST, DB_PORT, DB_PW } = process.env
-const clientConfig = process.env.DATABASE_URL || { DB_NAME, DB_USER, DB_HOST, DB_PORT, DB_PW };
+const { DB_NAME, DB_USER, DB_HOST, DB_PORT, DB_PW } = process.env;
+const clientConfig = process.env.DATABASE_URL || { database: DB_NAME,user: DB_USER,host: DB_HOST,port: DB_PORT,password: DB_PW };
 
 const client = new Pool (clientConfig, 
   {
