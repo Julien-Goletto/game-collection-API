@@ -2,6 +2,40 @@ const RAWG = require('../API/src/external_api/RAWG.service');
 require('dotenv').config({ path: '../API/.env' });
 const {RAWG_API_KEY} = process.env;
 
+/**
+ * Convert an array to an array format compatible with pgsql requirements
+ * @param {Array} list 
+ * @returns {string} concatenated array to string for using in pgsql purposes
+ */
+function formatSimpleListForPGSql (list){
+  return `array['` + `${list.join(`','`)}` + `']`;
+}
+/**
+ * Convert an including single quote string into double-single quotes string, format compatible with pgsql requirements
+ * @param {string} string 
+ * @returns {string} Sanitized string
+ */
+function sanitizeSingleQuotes(string){
+  return string.replace(/'+/g,"''");
+}
+
+/**
+ * Convert an array of multiple game objects to pgsql instructions, using the SQL add_new_game function
+ * @param {Array} gamesPayloadToInsert 
+ * @returns {string} SQL instructions
+ */
+function createGlobalInsertQuery(gamesPayloadToInsert){
+  
+  let globalQuery = ``;
+  for (const game of gamesPayloadToInsert){
+    globalQuery += `SELECT add_new_game('${sanitizeSingleQuotes(game.name)}','${game.released}','${game.background_image}',`
+                  + `${formatSimpleListForPGSql(game.platforms)},${formatSimpleListForPGSql(game.genres)});\n`;
+  };
+  console.log(globalQuery);
+  return globalQuery;
+};
+
+// A game Sample to be used with RAWG.createGamesPayload(list)
 gamesToAdd = [
   {platformId:7,gameTitle:'Metroid Dread'},{platformId:7,gameTitle:'Hollow Knight'},{platformId:7,gameTitle:'FEZ'},{platformId:7,gameTitle:'Undertale'},{platformId:7,gameTitle:'Hades'},
   {platformId:7,gameTitle:'Bayonetta'},{platformId:7,gameTitle:'The Legend of Zelda: Breath of the Wild'},{platformId:7,gameTitle:'Dark Souls: Remastered'},{platformId:7,gameTitle:'Gris'},
@@ -10,60 +44,7 @@ gamesToAdd = [
   {platformId:7,gameTitle:'Kirby and the Forgotten Land'},{platformId:7,gameTitle:'Triangle Strategy'},{platformId:7,gameTitle:'Shin Megami Tensei V'},
 ];
 
-function formatSimpleListForPGSql (list){
-  return `['` + `${list.join(`','`)}` + `']`;
-}
-function sanitizeSingleQuotes(string){
-  return string.replace(/'+/g,"''");
-}
-
-function createGlobalInsertQuery(gamesPayloadToInsert){
-  
-  let platformsList = [];
-  let genresList = [];
-  let formatedGamesList = '';
-  let setGamesPlatformsAndGenresCorrespondances = [];
-
-  // Creating 
-  for (const game of gamesPayloadToInsert){
-    //Beginning with platformsList
-    for (const platform of game.platforms){
-      if (!platformsList.includes(platform)){
-        platformsList.push(platform);
-      };
-    };
-    // Continue with genresList
-    for (const genre of game.genres){
-      if (!genresList.includes(genre)){
-        genresList.push(genre);
-      };
-    };
-    // Formated stringified game objects
-    formatedGamesList += `['${sanitizeSingleQuotes(game.name)}','${game.released}','${game.background_image}'],`;
-    // Formated stringified args for pivot-completing functions
-    setGamesPlatformsAndGenresCorrespondances.push(
-      { gameTitle: sanitizeSingleQuotes(game.name),
-        platforms: game.platforms,
-        genres: game.genres})
-  };
-  // Sringify final lists of platforms and genres to pass them as args to postgresql functions / last touches to other args
-  const formatedGlobalPlatformsList = formatSimpleListForPGSql(platformsList);
-  const formatedGlobalGenresList = formatSimpleListForPGSql(genresList);
-  formatedGamesList = '[' + formatedGamesList.slice(0,-1) + ']';
-  // Create sql queries usings postgresql previously declared functions
-  const insertNewPlatforms = `SELECT add_new_platforms(array${formatedGlobalPlatformsList});`;
-  const insertNewGenres = `SELECT add_new_genres(array${formatedGlobalGenresList});`;
-  const insertNewGames = `SELECT add_new_games(array${formatedGamesList});`;
-  let setGamesPlatforms=``
-  let setGamesGenres=``
-  for (game of setGamesPlatformsAndGenresCorrespondances){
-    setGamesPlatforms += `SELECT game_to_platforms('${game.gameTitle}', array${formatSimpleListForPGSql(game.platforms)});\n`
-    setGamesGenres += `SELECT game_to_genres('${game.gameTitle}', array${formatSimpleListForPGSql(game.genres)});\n`
-  }
-  // console.log(formatedPlatformsList,`\n`,formatedGenresList);
-  console.log(setGamesPlatforms + `\n` + setGamesGenres);
-};
-
+// A payload sample acquired with RAWG API and saved to avoid useless requests
 const gamesPayloadToInsert = [
   {
     name: 'Metroid Dread',
@@ -292,22 +273,3 @@ const gamesPayloadToInsert = [
 ];
 
 createGlobalInsertQuery(gamesPayloadToInsert);
-
-// RAWG.createGamesPayload(RAWG_API_KEY, gamesToAdd)
-//   .then(results => console.log("résultat final après appel de fonction", results));
-
-//ADD SQL function
-// CREATE FUNCTION addGenres(arr TEXT[]) RETURNS void AS $$
-// 		DECLARE
-// 			m TEXT;
-// 		BEGIN
-// 			FOREACH m IN ARRAY arr
-// 			LOOP
-// 			  INSERT INTO platform(name)
-// 			  SELECT m
-// 			  WHERE NOT EXISTS (SELECT id from platform WHERE name=m);
-// 			END LOOP;
-//     	END
-// $$ LANGUAGE plpgsql;
-
-// SELECT addGenres(array['Nintendo Switch','PC','Xbox One','PlayStation 4','macOS','Linux','PS Vita','iOS','Xbox 360','PlayStation 3','Xbox Series S/X','PlayStation 5','Wii U','Android']);

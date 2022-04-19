@@ -4,6 +4,7 @@ const {RAWG_API_KEY} = process.env;
 
 const RAWG = {
 
+  // Regrouping all used datas to format game objects
   dataToExtract: ['name', 'platforms', 'released', 'background_image', 'genres'],
 
   /**
