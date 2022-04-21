@@ -1,3 +1,3 @@
-const exampleController = require('./example.controller');
+const exampleController = require('./games.controller');
 
 module.exports = { exampleController };

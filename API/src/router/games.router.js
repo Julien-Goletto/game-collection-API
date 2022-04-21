@@ -1,7 +1,7 @@
 const express = require('express');
-const exampleController = require('../controllers');
+const gamesController = require('../controllers/games.controller');
 
-// Joi valdiation compulsary for each payload containing data
+// Joi validation compulsary for each payload containing data
 // const validate = require('../validation/validator');
 // const schema = require('../validation/schemas/example.schema');
 
@@ -10,14 +10,14 @@ const routerWrapper = require('../middlewares/routerWrapper');
 const handleError = require('../middlewares/handleError');
 
 // Configuration du subRouter 
-const router = express.Router();
+const gamesRouter = express.Router();
 
-router
-  .route('/')
-  .get(routerWrapper(exampleController.getExample));
+gamesRouter
+  .get('/', routerWrapper(gamesController.getAllGames))
+  .get('/:gameId', routerWrapper(gamesController.getGameInfosByID));
   //Example de route avec validation du body via Joi
   // .post(validate('body', schema), routerWrapper(exampleController.postExample)); 
 
-router.use(handleError);
+gamesRouter.use(handleError);
 
-module.exports = router;
+module.exports = gamesRouter;

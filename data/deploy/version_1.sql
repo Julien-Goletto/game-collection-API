@@ -58,4 +58,24 @@ CREATE TABLE "game_has_user" (
   "updatedAt" TIMESTAMPTZ
 );
 
+ALTER TABLE "game" OWNER to "ludotheque";
+ALTER TABLE "platform" OWNER to "ludotheque";
+ALTER TABLE "genre" OWNER to "ludotheque";
+ALTER TABLE "user" OWNER to "ludotheque";
+ALTER TABLE "game_has_platform" OWNER to "ludotheque";
+ALTER TABLE "game_has_genre" OWNER to "ludotheque";
+ALTER TABLE "game_has_user" OWNER to "ludotheque";
+
+CREATE VIEW all_games_with_infos AS
+	SELECT game.id, game.name, ARRAY_AGG(DISTINCT platform.name) AS platforms, game.released_on, ARRAY_AGG(DISTINCT genre.name) AS genres, game.background_image
+	FROM game
+	INNER JOIN game_has_platform ON game_has_platform.game_id = game.id
+	INNER JOIN platform ON platform.id = game_has_platform.platform_id
+	INNER JOIN game_has_genre ON game_has_genre.game_id = game.id
+	INNER JOIN genre ON genre.id = game_has_genre.genre_id
+	GROUP BY
+		game.id, game.name, game.released_on, game.background_image;
+
+ALTER TABLE public.all_games_with_infos OWNER TO ludotheque;
+
 COMMIT;

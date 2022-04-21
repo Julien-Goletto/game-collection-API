@@ -1,0 +1,17 @@
+@protocol=http://
+@host=localhost
+@port=:3000
+@prefix=/v1
+@baseUrl={{protocol}}{{host}}{{port}}{{prefix}}
+
+### Get all games from db
+GET {{baseUrl}}/games
+
+### Get all game infos with gameId
+GET {{baseUrl}}/games/1
+
+### Get all genres
+GET {{baseUrl}}/genres/
+
+### Get a genre by id
+GET {{baseUrl}}/genres/5

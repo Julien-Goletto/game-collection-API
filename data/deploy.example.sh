@@ -14,8 +14,8 @@ sqitch add version_2 -n "seeding db"
 sqitch add version_3 -n "Seeding test datas"
 
 # To revert (each following command can be adressed to a specific version)
-sqitch revert db:pg:ludotheque
+# sqitch revert db:pg:ludotheque
 # To deploy
 sqitch deploy db:pg:ludotheque
 # To verify
-sqitch verify db:pg:ludotheque
+# sqitch verify db:pg:ludotheque
