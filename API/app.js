@@ -1,16 +1,10 @@
 require('dotenv').config();
 const debug = require('debug')("App");
-const express = require('express');
+const { ApolloServer } = require('apollo-server');
+const{ schemas, resolvers } = require('./src/GraphQL');
 // const cors = require('cors');
 
-const { HOST, PORT } = process.env;
-const app = express();
-const router = require('./src/router/');
+const { PORT } = process.env;
+const app = new ApolloServer({typeDefs: schemas, resolvers});
 
-app
-  .use(express.json())
-  .use('/v1', router);
-
-app.listen(PORT, () => {
-  debug(`Listening on http://${HOST}:${PORT}`)
-});
+app.listen(PORT).then(({url})=> debug(`🚀  Server ready at ${url}`));

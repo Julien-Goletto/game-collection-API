@@ -6,7 +6,7 @@
   "auhtor": "Julien Goletto",
   "scripts": {
     "start": "node app.js",
-    "dev": "DEBUG=App,Game_Controller,Game_DataMapper,DB_Client,Error_Handler,Router_Wrapper,Validator nodemon app.js"
+    "dev": "DEBUG=App,Resolvers,DB_Client,Error_Handler,Router_Wrapper,Validator nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Julien-Goletto/RESTful-API-Node-Express#readme",
   "dependencies": {
+    "apollo-server": "^3.6.7",
     "axios": "^0.26.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
