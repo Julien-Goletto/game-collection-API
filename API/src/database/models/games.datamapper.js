@@ -19,9 +19,20 @@ const gamesDataMapper = {
     };
     const results = await client.query(query);
     if(!results.rowCount){
-      throw new APIError ("This games is still not saved in base.", 404);
+      throw new APIError ("This game is still not saved in base.", 404);
     };
     return results.rows;
+  },
+  async postNewGame(game){
+    const query = {
+      text: `SELECT add_new_game($1,$2,$3,$4,$5)`,
+      values: [game.name, game.released, game.background_image, game.platforms, game.genres],
+    };
+    const results = await client.query(query);
+    if(!results.rowCount){
+      throw new APIError ("The requested game couldn't be saved.", 404);
+    };
+    debug(results);
   }
 };
 

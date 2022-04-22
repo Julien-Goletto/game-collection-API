@@ -2,8 +2,8 @@ const express = require('express');
 const gamesController = require('../controllers/games.controller');
 
 // Joi validation compulsary for each payload containing data
-// const validate = require('../validation/validator');
-// const schema = require('../validation/schemas/example.schema');
+const validate = require('../validation/validator');
+const { gameTitleSchema, gameSchema } = require('../validation/schemas/');
 
 // // Gestion des erreurs
 const routerWrapper = require('../middlewares/routerWrapper');
@@ -14,9 +14,8 @@ const gamesRouter = express.Router();
 
 gamesRouter
   .get('/', routerWrapper(gamesController.getAllGames))
-  .get('/:gameId', routerWrapper(gamesController.getGameInfosByID));
-  //Example de route avec validation du body via Joi
-  // .post(validate('body', schema), routerWrapper(exampleController.postExample)); 
+  .get('/:gameId', routerWrapper(gamesController.getGameInfosByID))
+  .post('/', validate('body', gameSchema), routerWrapper(gamesController.addNewGame)); 
 
 gamesRouter.use(handleError);
 
