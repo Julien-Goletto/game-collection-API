@@ -13,7 +13,6 @@ const gamesController = {
   },
   async addNewGame(req,res){
     const game = req.body;
-    debug(game);
     const result = await gamesDataMapper.postNewGame(game);
     res.status(201).json(result);
   }

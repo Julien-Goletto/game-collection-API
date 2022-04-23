@@ -7,11 +7,13 @@ const router = Router();
 const gamesRouter = require('./games.router');
 const platformsRouter = require('./platforms.router');
 const genresRouter = require('./genres.router');
+const usersRouter = require('./users.router');
 
 // Adding subrouters
 router
   .use('/games', gamesRouter)
   .use('/platforms', platformsRouter)
-  .use('/genres', genresRouter);
+  .use('/genres', genresRouter)
+  .use('/users', usersRouter);
 
 module.exports = router;

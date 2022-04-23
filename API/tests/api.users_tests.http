@@ -1,0 +1,29 @@
+@protocol=http://
+@host=localhost
+@port=:3000
+@prefix=/v1
+@baseUrl={{protocol}}{{host}}{{port}}{{prefix}}
+
+### Create a new user in db
+POST {{baseUrl}}/users/register
+content-type: application/json
+
+{
+  "pseudo": "Titi",
+  "password": "test"
+}
+
+### Log in user
+POST {{baseUrl}}/users/login
+content-type: application/json
+
+{
+  "pseudo": "Tata",
+  "password": "test"
+}
+
+### Log out user
+GET {{baseUrl}}/users/logout
+
+### Get users list
+GET {{baseUrl}}/users/

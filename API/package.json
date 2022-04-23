@@ -6,7 +6,7 @@
   "auhtor": "Julien Goletto",
   "scripts": {
     "start": "node app.js",
-    "dev": "DEBUG=App,Game_Controller,Game_DataMapper,DB_Client,Error_Handler,Router_Wrapper,Validator nodemon app.js"
+    "dev": "DEBUG=App,Game_Controller,User_Controller,Game_DataMapper,User_DataMapper,DB_Client,Error_Handler,Router_Wrapper,Validator,Check_User nodemon app.js"
   },
   "repository": {
     "type": "git",

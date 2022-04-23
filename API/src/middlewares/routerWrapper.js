@@ -1,10 +1,7 @@
-const debug = require('debug')('Router_Wrapper');
-
 const routerWrapper = (method) => {
-  debug('Entering Wrapper');
+const debug = require('debug')('Router_Wrapper');
   return async (req, res, next) => {
     try{
-      debug('Router is called');
       await method(req, res, next);
     }
     catch(err){

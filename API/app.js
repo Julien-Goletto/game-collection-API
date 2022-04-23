@@ -4,10 +4,7 @@ const express = require('express');
 
 const app = express();
 
-const router = require('./src/router/');
-app
-  .use(express.json()) // Body parser
-  .use('/v1', router); // Prefixing API routes and using router
+app.use(express.json()) // Body parser
 
 // Setting session system
 const session = require('express-session');
@@ -15,7 +12,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true, maxAge:null  }
+  cookie: { secure: false, maxAge:null  }
 }));
 
 // Setting CORS
@@ -25,6 +22,9 @@ const corsOptions = {
   optionSucessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));
+
+const router = require('./src/router/');
+app.use('/v1', router); // Prefixing API routes and using router
 
 const { HOST, PORT } = process.env;
 app.listen(PORT, () => {

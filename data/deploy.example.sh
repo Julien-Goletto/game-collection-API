@@ -1,13 +1,10 @@
 # Deploy script example
 # Do not forget to make it executable with chmod +x
 
-createuser ludotheque
+# createuser ludotheque
 createdb ludotheque -O ludotheque
 
-export PGUSER='ludotheque'
-export PGDATABASE='ludotheque'
-
-sqitch init ludotheque --engine pg
+# sqitch init ludotheque --engine pg
 
 sqitch add version_1 -n "structure de base"
 sqitch add version_2 -n "seeding db"

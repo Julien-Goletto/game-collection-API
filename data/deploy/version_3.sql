@@ -2,6 +2,7 @@
 
 BEGIN;
 
+-- Seeding game / platform / genre tables with their pivot tables
 SELECT add_new_game('Metroid Dread','2021-10-08','https://media.rawg.io/media/games/c26/c262f8b54b46edc72594c4a9bb8ee13e.jpg',array['Nintendo Switch'],array['Platformer','Action','RPG']);
 SELECT add_new_game('Hollow Knight','2017-02-23','https://media.rawg.io/media/games/4cf/4cfc6b7f1850590a4634b08bfab308ab.jpg',array['PC','Xbox One','PlayStation 4','Nintendo Switch','macOS','Linux','PS Vita'],array['Platformer','Indie','Action']);
 SELECT add_new_game('FEZ','2012-04-13','https://media.rawg.io/media/games/4cb/4cb855e8ef1578415a928e53c9f51867.png',array['PC','PlayStation 4','Nintendo Switch','iOS','macOS','Linux','Xbox 360','PlayStation 3','PS Vita'],array['Adventure','Action','Puzzle','Indie','Platformer']);
@@ -22,4 +23,11 @@ SELECT add_new_game('Streets of Rage 4','2020-04-30','https://media.rawg.io/medi
 SELECT add_new_game('Kirby and the Forgotten Land','2022-03-25','https://media.rawg.io/media/games/42a/42a71f0cbe23185f778c10462faa12d8.jpg',array['Nintendo Switch'],array['Action']);
 SELECT add_new_game('TRIANGLE STRATEGY','2022-03-04','https://media.rawg.io/media/games/334/3340776fc9a78199838c7c1d8ec22bd5.jpg',array['Nintendo Switch'],array['Strategy','Adventure','RPG']);
 SELECT add_new_game('Shin Megami Tensei V','2021-11-12','https://media.rawg.io/media/games/1b6/1b6673b646af55f834938bedebee2a0f.jpg',array['Nintendo Switch'],array['Adventure','Action','RPG']);
+
+-- Seeding user TABLE
+
+INSERT INTO "user" ("pseudo","password", "is_admin") VALUES
+('Yves Signal','motdepasse', true),
+('Neofelis','motdepasse', false);
+
 COMMIT;

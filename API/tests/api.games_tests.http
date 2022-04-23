@@ -16,7 +16,7 @@ POST {{baseUrl}}/games
 content-type: application/json
 
 {
-  "name": "Metroid 18",
+  "name": "Metroid Prime 2",
   "platforms": [
     "PS Vita"
   ],

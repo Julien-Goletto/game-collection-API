@@ -1,6 +1,6 @@
 -- -- Deploy ludotheque:version_2 to pg
 
--- BEGIN;
+BEGIN;
 
 CREATE FUNCTION add_new_game(
   game_name TEXT,
@@ -54,7 +54,7 @@ DECLARE
 			END LOOP;
 			
 	ELSE
-		RAISE NOTICE 'Game (%) already in base.', game_name;
+		RAISE EXCEPTION 'Game (%) already in base.', game_name;
 	END IF;
 	END
 $$ LANGUAGE plpgsql;

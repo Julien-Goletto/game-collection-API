@@ -3,21 +3,20 @@ const APIError = require('../Errors/APIError');
 
 const checkingUser ={
   checkLogStatus(req,_,next){
-    debug(req.session);
     if(req.session.user){
       next();
     }
     else {
-      throw new APIError("Vous n'êtes pas connecté.");
+      throw new APIError("To continue, you must be logged in.");
     };
   },
-  checkAutorization(req,res,next){
+  checkAutorization(req,_,next){
     debug(req.session);
     if(req.session.user.isAdmin){
       next();
     }
     else {
-      throw new APIError("Vous n'avez pas les privilèges nécessaires à cette action.");
+      throw new APIError("You doesn't have the authorization for this action.");
     };
   },
 };
