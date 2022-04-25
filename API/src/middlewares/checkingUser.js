@@ -1,6 +1,17 @@
 const debug = require('debug')('Check_User');
 const APIError = require('../Errors/APIError');
 
+  /**
+   * Method collection relative to user status : connection and authorization
+   * To be placed prefixing controller methods callings in routers
+   * @route GET /v1/checkingUser
+   * @group - Middlewares
+   * @param {req} request
+   * @param {res} response
+   * @param {next} next
+   * @returns {next()} if tests pass
+   * @throws {APIError} If connections status / authorization aren't matched to perform the next action
+   */
 const checkingUser ={
   checkLogStatus(req,_,next){
     if(req.session.user){

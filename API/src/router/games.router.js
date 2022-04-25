@@ -17,8 +17,31 @@ const { gameTitleSchema, gameSchema } = require('../validation/schemas/');
 const gamesRouter = express.Router();
 
 gamesRouter
+  /**
+   * Get a list of all games objects saved in database
+   * @route Get /games
+   * @group - Games
+   * @returns {Array} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
   .get('/', routerWrapper(gamesController.getAllGames))
+  /**
+   * Get a detailled game object saved in database via its id
+   * @route Get /games/:gameId
+   * @group - Games
+   * @param {Integer} gameId
+   * @returns {Game} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
   .get('/:gameId', routerWrapper(gamesController.getGameInfosByID))
+  /**
+   * Post a new game object in database
+   * @route POST /games
+   * @group - Games
+   * @param {Game} game
+   * @returns {Game} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
   .post('/', checkingUser.checkLogStatus, validate('body', gameSchema), routerWrapper(gamesController.addNewGame)); 
 
 gamesRouter.use(handleError);

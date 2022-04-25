@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { HOST, PORT } = process.env;
 const debug = require('debug')("App");
 const express = require('express');
 
@@ -26,7 +27,27 @@ app.use(cors(corsOptions));
 const router = require('./src/router/');
 app.use('/v1', router); // Prefixing API routes and using router
 
-const { HOST, PORT } = process.env;
+
+const expressSwagger = require('express-swagger-generator')(app);
+const expressSwaggerOptions = {
+  swaggerDefinition: {
+    info: {
+        description: 'A videogame library manager REST API',
+        title: 'Ludotheque',
+        version: '1.0.0',
+    },
+    host: `${HOST}:${PORT}`,
+    basePath: '/v1',
+    produces: [
+        "application/json"
+    ],
+    schemes: ['http', 'https']
+},
+basedir: __dirname, //app absolute path
+files: ['./src/**/*.js'] //Path to the API handle folder
+}
+expressSwagger(expressSwaggerOptions);
+
 app.listen(PORT, () => {
   debug(`Listening on http://${HOST}:${PORT}`)
 });

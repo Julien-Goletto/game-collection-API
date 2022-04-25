@@ -9,7 +9,7 @@ POST {{baseUrl}}/users/register
 content-type: application/json
 
 {
-  "pseudo": "Tutu",
+  "pseudo": "Tetu",
   "password": "test"
 }
 
@@ -18,8 +18,8 @@ POST {{baseUrl}}/users/login
 content-type: application/json
 
 {
-  "pseudo": "Tutu",
-  "password": "test"
+  "pseudo": "Tatu",
+  "password": "testz"
 }
 
 ### Log out user

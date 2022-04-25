@@ -17,9 +17,40 @@ const { userSchema } = require('../validation/schemas/');
 const usersRouter = express.Router();
 
 usersRouter
+  /**
+   * Save a new user in database
+   * @route POST /users/register
+   * @group - Users
+   * @param {User}  user- user object credentials
+   * @returns {String} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
   .post('/register', validate('body',userSchema), routerWrapper(usersController.postNewUser))
+  /**
+   * Log the user comparing entered credentails with hashed datas in database,
+   * then pass usefull infos to the session
+   * @route POST /users/login
+   * @group - Users
+   * @param {User} user - user object credentials
+   * @returns {User} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
   .post('/login', validate('body',userSchema), routerWrapper(usersController.logUser))
+    /**
+   * Disconnect user, suppressing the session.user
+   * @route GET /users/logout
+   * @group - Users
+   * @return {String} 200 - success response
+   * @return {APIError} 404 - fail response
+   */
   .get('/logout', routerWrapper(usersController.logOutUser))
+    /**
+   * Return users listing
+   * @route GET /users/
+   * @group - Users
+   * @returns {String} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
   .get('/', routerWrapper(usersController.getUsersList));
 
 usersRouter.use(handleError);

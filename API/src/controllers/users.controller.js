@@ -8,6 +8,12 @@ const usersController = {
     const result = await usersDataMapper.createNewUser(user);
     res.status(201).json(result);
   },
+  /**
+   * Passes the pseudo and authorization level to the session
+   * @param {*} req 
+   * @param {*} res 
+   * @returns {user Object} in json format
+   */
   async logUser(req, res) {
     const user = req.body;
     const result = await usersDataMapper.getUser(user);

@@ -8,4 +8,4 @@
 GET {{baseUrl}}/platforms
 
 ### Get a platform by id
-GET {{baseUrl}}/platforms/14
+GET {{baseUrl}}/platforms/28
