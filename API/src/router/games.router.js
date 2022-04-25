@@ -10,7 +10,7 @@ const checkingUser = require('../middlewares/checkingUser');
 
 // Joi validation compulsary for each payload containing data
 const validate = require('../validation/validator');
-const { gameTitleSchema, gameSchema } = require('../validation/schemas/');
+const { RAWGGameInfosSchema, gameSchema } = require('../validation/schemas/');
 
 
 // Configuration du subRouter 
@@ -35,7 +35,18 @@ gamesRouter
    */
   .get('/:gameId', routerWrapper(gamesController.getGameInfosByID))
   /**
-   * Post a new game object in database
+   * Get a game from RAWG services, getting all datas, before adding it to database with next post method
+   * @route POST /games/newgame/
+   * @group - Games
+   * @param {Integer} platformId - correspond to platform Id from RAWG
+   * @param {String} gameTitle - has to be exact
+   * @returns {Game} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
+  .post('/newgame/', checkingUser.checkLogStatus, validate('body', RAWGGameInfosSchema), routerWrapper(gamesController.postGameFromRAWG))
+  /**
+   * Post a new game object in database. This method also create the non-existent platforms and genres
+   * No direct methods are available to add the separately.
    * @route POST /games
    * @group - Games
    * @param {Game} game

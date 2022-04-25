@@ -19,7 +19,7 @@ content-type: application/json
 
 {
   "pseudo": "Tatu",
-  "password": "testz"
+  "password": "test"
 }
 
 ### Log out user

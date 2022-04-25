@@ -1,5 +1,6 @@
 const debug = require('debug')('Game_Controller');
 const gamesDataMapper = require('../database/models/games.datamapper');
+const RAWG = require('../external_api/')
 
 const gamesController = {
   async getAllGames(_, res) {
@@ -10,6 +11,13 @@ const gamesController = {
     const gameId = req.params.gameId;
     const result = await gamesDataMapper.getGameInfosById(gameId);
     res.status(200).json(result);
+  },
+  async postGameFromRAWG(req, res){
+    const { RAWG_API_KEY } = process.env;
+    debug(req.body);
+    const {platformId, gameTitle} = req.body;
+    const result = await RAWG.getGamesFromPlatformIdAndSearchQuery(RAWG_API_KEY, platformId, gameTitle);
+    res.status(201).json(result);
   },
   async addNewGame(req,res){
     const game = req.body;

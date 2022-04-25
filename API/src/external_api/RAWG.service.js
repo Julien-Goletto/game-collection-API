@@ -1,6 +1,5 @@
 require('dotenv').config({ path: '../../.env' });
 const axios = require('axios');
-const {RAWG_API_KEY} = process.env;
 
 const RAWG = {
 
@@ -49,7 +48,6 @@ const RAWG = {
     gameObject.genres = reformatedGenres;
     return gameObject;
   },
-
 
   async createGamesPayload (RAWG_API_KEY, gamesToAdd){
     const gamesPayloadPromises = [];

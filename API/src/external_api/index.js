@@ -1,3 +1,3 @@
 const RAWG = require ("./RAWG.service");
 
-module.exports = { RAWG }
+module.exports = RAWG

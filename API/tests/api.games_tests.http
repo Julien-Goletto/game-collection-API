@@ -10,8 +10,17 @@ GET {{baseUrl}}/games
 ### Get all game infos with gameId
 GET {{baseUrl}}/games/1
 
-### Post a new game
+### Get a game from RAWG
+POST {{baseUrl}}/games/newgame
+content-type: application/json
 
+{
+  "platformId": 7,
+  "gameTitle": "Super Mario Odyssey"
+}
+
+
+### Post a new game
 POST {{baseUrl}}/games
 content-type: application/json
 
