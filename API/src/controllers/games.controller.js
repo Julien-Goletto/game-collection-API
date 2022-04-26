@@ -17,12 +17,18 @@ const gamesController = {
     debug(req.body);
     const {platformId, gameTitle} = req.body;
     const result = await RAWG.getGamesFromPlatformIdAndSearchQuery(RAWG_API_KEY, platformId, gameTitle);
-    res.status(201).json(result);
+    res.status(200).json(result);
   },
   async addNewGame(req,res){
     const game = req.body;
     const result = await gamesDataMapper.postNewGame(game);
     res.status(201).json(result);
+  },
+  async deleteGamebyId(req,res){
+    debug(req.session);
+    const gameTitle = req.params.gameTitle;
+    const result = await gamesDataMapper.deleteGame(gameTitle);
+    res.status(200).json(result);
   }
 };
 

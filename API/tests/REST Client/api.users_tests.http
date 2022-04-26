@@ -18,7 +18,7 @@ POST {{baseUrl}}/users/login
 content-type: application/json
 
 {
-  "pseudo": "Tatu",
+  "pseudo": "Tutu",
   "password": "test"
 }
 

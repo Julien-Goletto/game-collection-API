@@ -53,7 +53,16 @@ gamesRouter
    * @returns {Game} 200 - success response
    * @returns {APIError} 404 - fail response
    */
-  .post('/', checkingUser.checkLogStatus, validate('body', gameSchema), routerWrapper(gamesController.addNewGame)); 
+  .post('/', checkingUser.checkLogStatus, validate('body', gameSchema), routerWrapper(gamesController.addNewGame)) 
+  /**
+   * Delete a game object from database, by its id.
+   * @route DELETE /games/:gameID
+   * @group - Games
+   * @param {Integer} gameId
+   * @returns {String} 204 - success response
+   * @returns {APIError} 404 - fail response
+   */
+  .delete('/:gameTitle', checkingUser.checkAutorization, routerWrapper(gamesController.deleteGamebyId)); 
 
 gamesRouter.use(handleError);
 

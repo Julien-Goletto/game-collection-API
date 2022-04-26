@@ -19,13 +19,12 @@ content-type: application/json
   "gameTitle": "Super Mario Odyssey"
 }
 
-
 ### Post a new game
 POST {{baseUrl}}/games
 content-type: application/json
 
 {
-  "name": "Metroid Prime 2",
+  "name": "Metroid Prime 25",
   "platforms": [
     "PS Vita"
   ],
@@ -33,3 +32,6 @@ content-type: application/json
   "background_image": "https://media.rawg.io/media/games/4cf/4cfc6b7f1850590a4634b08bfab308ab.jpg",
   "genres": [ "Platformer", "Indie", "Action" ]
 }
+
+### Delete a game
+DELETE {{baseUrl}}/games/Metroid Prime 25

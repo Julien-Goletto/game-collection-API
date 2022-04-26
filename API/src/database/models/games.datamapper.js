@@ -48,6 +48,18 @@ const gamesDataMapper = {
     };
     await client.query(query);
     return 'The game has been saved into database';
+  },
+  async deleteGame(gameTitle){
+    const query = {
+      text: `DELETE FROM game WHERE game.name = $1`,
+      values: [gameTitle],
+    };
+    debug(query);
+    const results = await client.query(query);
+    if(!results.rowCount){
+      throw new APIError ("This game doesn't exist in base.", 404);
+    };
+    return 'The game has been deleted from database';
   }
 };
 
