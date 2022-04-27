@@ -13,7 +13,7 @@ content-type: application/json
   "password": "test"
 }
 
-### Log in user
+### Log in admin user
 POST {{baseUrl}}/users/login
 content-type: application/json
 
@@ -27,3 +27,6 @@ GET {{baseUrl}}/users/logout
 
 ### Get users list
 GET {{baseUrl}}/users/
+
+### Delete a user by pseudo
+DELETE {{baseUrl}}/users/Test12

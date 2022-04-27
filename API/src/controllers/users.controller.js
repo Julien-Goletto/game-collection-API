@@ -30,7 +30,11 @@ const usersController = {
   },
   async getUsersList(_,res) {
     const results = await usersDataMapper.GetUsersList();
-    console.log(results);
+    res.status(200).json(results);
+  },
+  async deleteUser(req,res) {
+    const pseudo = req.params.pseudo;
+    const results = await usersDataMapper.deleteUserWithPseudo(pseudo);
     res.status(200).json(results);
   }
 };

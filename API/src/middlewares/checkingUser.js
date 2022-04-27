@@ -22,7 +22,6 @@ const checkingUser ={
     };
   },
   checkAutorization(req,_,next){
-    debug(req.session);
     if(req.session.user.isAdmin){
       next();
     }

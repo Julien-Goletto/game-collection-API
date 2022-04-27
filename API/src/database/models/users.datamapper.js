@@ -59,7 +59,20 @@ const usersDataMapper = {
       throw new APIError ("No user registered yet.", 404);
     };
     return results.rows[0].registered_users;
-  }
+  },
+  async deleteUserWithPseudo(pseudo){
+    debug("On entre dans le datamapper")
+    const query = {
+      text: `DELETE FROM "user" WHERE pseudo = $1;`,
+      values: [pseudo],
+    };
+    const results = await client.query(query);
+    if(!results.rowCount){
+      throw new APIError ("This user doesn't exist.", 404);
+    };
+    debug(results);
+    return 'User successfuly deleted.';
+  },
 };
 
 module.exports = usersDataMapper;

@@ -6,7 +6,7 @@ const handleError = require('../middlewares/handleError');
 const routerWrapper = require('../middlewares/routerWrapper');
 
 // // Checking user and privegies
-// const checkingUser = require('../middlewares/checkingUser');
+const checkingUser = require('../middlewares/checkingUser');
 
 // // Joi validation compulsary for each payload containing data
 const validate = require('../validation/validator');
@@ -51,7 +51,15 @@ usersRouter
    * @returns {String} 200 - success response
    * @returns {APIError} 404 - fail response
    */
-  .get('/', routerWrapper(usersController.getUsersList));
+  .get('/', routerWrapper(usersController.getUsersList))
+    /**
+   * Delete a user, using the pseudo (admin only)
+   * @route GET /users/:pseudo
+   * @group - Users
+   * @returns {String} 200 - success response
+   * @returns {APIError} 404 - fail response
+   */
+  .delete('/:pseudo', checkingUser.checkAutorization, routerWrapper(usersController.deleteUser));
 
 usersRouter.use(handleError);
 
