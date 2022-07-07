@@ -1,79 +1,80 @@
 # SQITCH
 
-Sqitch est un outil de déploiement pour notre base de données (ici PostgreSQL).
+Sqitch is a wonderful tool for database deploying : https://sqitch.org/
 
-## Initialisation
+## Initialization
 
-Pour initialiser notre dossier en tant que projet Sqitch :
+First you have to initialize your project.
+Go to the folder containing your data structure, then :
 
 ```
-sqitch init training_API_scripts --engine pg
+sqitch init filmotheque --engine pg
 ```
 
-**training_API_scripts** est le nom de notre projet (michelizable).
-**pg** est notre moteur de BDD (postgresql).
+**filmotheque** is your project name.
+**pg** is the DB engine (here postgresql).
 
-Une fois cette commande passée, trois dossiers vont être créés :
+It creates 3 folders :
 
-- deploy : pour les scripts de déploiement
-- revert : pour les scripts pour revenir en arrière
-- verify : pour les scripts de vérification d'un déploiement
+- deploy
+- revert
+- verify
 
-Deux fichiers sont ajoutés :
+These 3 folders will receive all your sql scripts.
+And 2 files :
 
-- sqitch.conf : fichier de configuration
-- sqitch.plan : firchier d'informations
+- sqitch.conf
+- sqitch.plan
 
-## Création d'une version
+## Create a version
 
-Pour créer une nouvelle version d'un déploiement/migration :
 
 ```
 sqitch add version_1 -n "structure de base"
 ```
 
-**version_1** : c'est le nom de notre version (de notre commit)
-**"structure de base"**: c'est les détails associés à la version (message du commit)
+**version_1** : version name (think it like a kind of git commit)
+**"structure de base"**: version message (-m "message")
 
-Une fois la commande passée, il nous faut remplir les fichiers avec le code correspondant.
+Once the version is created, sqitch generates one script in each folders previously created, now it's time for you to work on your logic.
 
-## Exécution des scripts
+## Executing scripts
 
-Pour lancer un script de deploiement (dossier deploy) :
+From your data folder :
 
 ```
 sqitch deploy db:pg:filmotheque nom_de_la_version
 ```
-Le déploiement effectue le déploiement de toutes les versions jusqu'à la version spécifiée.
+Sqitch deploys all scripts one after the other, from start to the targetted version.
 
 ---
 
-Pour lancer un script de retour arrière (dossier revert)
+To revert from a version to another one :
 
 ```
 sqitch revert db:pg:filmotheque nom_de_la_version
 ```
 
-Le retour arrière se fait jusqu'à la version spécifiée.
+The revert is done until the targetted version.
 
 ---
 
-Pour lancer un script de vérification (dossier verify)
+To verify the content of your database :
 
 ```
 sqitch verify db:pg:filmotheque nom_de_la_version
 ```
-La vérification se fait sur toutes les versions jusqu'à la version spécifiée.
+The check is done until the targetted version.
 
 ---
 
-Dans le cas où on ne spécifie pas de version en utilisatant deploy,revert ou verify, il va tout déployer ou tout annuler à zéro ou tout véfifier.
+If you want to fully install your database from scratch, just omit the version argument
 
-## Remise à zéro
+## Reset everything
 
-Il est possible de venir pourrir Sqitch au départ quand on ne le maîtrise pas encore.
+Your database could quickly be a mess.
 
-Pour revenir dans un état où Sqitch n'est pas installé sans perdre nos scripts, il faut :
+To reset sqitch configuration and retreive a previous safe state :
 
-- effacer sqitch.plan et sqitch.conf
-- supprimer le schéma Sqitch de la BDD (drop cascade)
+- delete both sqitch.plan and sqitch.conf
+- drop cascade Sqitch schema from DB
