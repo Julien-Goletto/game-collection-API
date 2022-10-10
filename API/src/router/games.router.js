@@ -62,7 +62,7 @@ gamesRouter
    * @returns {String} 204 - success response
    * @returns {APIError} 404 - fail response
    */
-  .delete('/:gameTitle', checkingUser.checkAutorization, routerWrapper(gamesController.deleteGamebyId)); 
+  .delete('/:gameTitle', checkingUser.checkLogStatus, checkingUser.checkAutorization, routerWrapper(gamesController.deleteGamebyId)); 
 
 gamesRouter.use(handleError);
 

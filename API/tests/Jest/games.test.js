@@ -5,26 +5,35 @@ const app = require('../../app');
 const request = supertest(app);
 
 const session = require('supertest-session');
-let testSession = session(app);
+const testSession = session(app);
+const adminSession = session(app);
 
-describe("API e2e", ()=>{
-  beforeEach(function(done){
-    testSession.post('/v1/users/login')
-      .send({pseudo: "Tutu",password: "test"})
-      .expect(200)
-      .end(function (err) {
-        if (err) return done(err);
-        authenticatedSession = testSession;
-        return done();
-      });
-  })
-  describe('Games routes', ()=>{
+const testUser = {
+  pseudo: 'Tutu',
+  password: 'Test',
+}
+
+const adminUser = {
+  pseudo: process.env.ADMIN_PSEUDO,
+  password: process.env.ADMIN_PASSWORD,
+}
+
+describe("API e2e", () =>{
+  beforeAll( async() => {
+    await testSession.post('/v1/users/register')
+      .send(testUser);
+    await testSession.post('/v1/users/login')
+      .send(testUser);
+    await adminSession.post('/v1/users/login')
+      .send(adminUser);
+  });
+  describe('Games routes', () => {
     it('Should get all games in database', async() => {
       const response = await request.get('/v1/games');
       expect(response.status).toBe(200);
     });
     it('Should get game details from game ID', async() => {
-      let gameId = 21;
+      let gameId = 1;
       const response = await request.get('/v1/games/' + gameId);
       expect(response.status).toBe(200);
       expect (response.text).toContain("Metroid Dread");
@@ -35,9 +44,9 @@ describe("API e2e", ()=>{
           platformId: 7,
           gameTitle: "Super Mario Odyssey",
         };
-      const response = await testSession.post('/v1/games/newgame').send({...game});
+      const response = await testSession.post('/v1/games/newgame').send(game);
       expect(response.status).toBe(200);
-      expect(response.text).toContain("{\"name\":\"Super Mario Odyssey\",\"platforms\":[\"Nintendo Switch\"],\"released\":\"2017-10-27\",\"background_image\":\"https://media.rawg.io/media/games/267/267bd0dbc496f52692487d07d014c061.jpg\",\"genres\":[\"Platformer\",\"Arcade\"]}");
+      expect(response.text).toContain("Super Mario Odyssey");
     });
     it('Should post a new game to DB', async() => {
       game = 
@@ -48,15 +57,18 @@ describe("API e2e", ()=>{
           background_image: "https://media.rawg.io/media/games/4cf/4cfc6b7f1850590a4634b08bfab308ab.jpg",
           genres: ["Platformer","Action"]
         };
-      const response = await testSession.post('/v1/games/').send({...game});
+      const response = await testSession.post('/v1/games/').send(game);
       expect(response.status).toBe(201);
       expect(response.text).toContain("The game has been saved into database");
     });
     it('Should delete a game from DB', async() => {
       gameTitle = game.name;
-      const response = await testSession.delete('/v1/games/' + gameTitle);
+      const response = await adminSession.delete('/v1/games/' + game.title);
       expect(response.status).toBe(200);
       expect(response.text).toContain("The game has been deleted from database");
     });
+    afterAll( async() => {
+        await adminSession.delete('/v1/users/' + testUser.pseudo);
+      });
   });
 })

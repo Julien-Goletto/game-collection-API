@@ -14,7 +14,9 @@ const APIError = require('../Errors/APIError');
    */
 const checkingUser ={
   checkLogStatus(req,_,next){
-    if(req.session.user){
+    const { user } = req.session;
+    if(user){
+      req.session.user = user;
       next();
     }
     else {
@@ -26,7 +28,7 @@ const checkingUser ={
       next();
     }
     else {
-      throw new APIError("You doesn't have the authorization for this action.");
+      throw new APIError("You don't have the authorization for this action.");
     };
   },
 };
