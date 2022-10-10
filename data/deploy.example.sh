@@ -1,7 +1,7 @@
 # Deploy script example
 # Do not forget to make it executable with chmod +x
 
-# createuser ludotheque
+createuser ludotheque
 createdb ludotheque -O ludotheque
 
 # sqitch init ludotheque --engine pg
