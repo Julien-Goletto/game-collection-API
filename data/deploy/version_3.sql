@@ -47,6 +47,6 @@ SELECT add_new_game('Shin Megami Tensei V','2021-11-12','https://media.rawg.io/m
 -- Seeding user TABLE
 
 INSERT INTO "user" ("pseudo","password", "is_admin") VALUES
-('Yves Signal','$2a$10$0hb7SVdtr1ui9hTW/Qq1eepDVz1aZTnThEdlw2djhr70D42rxbfn2', true),
+('Yves Signal','$2a$10$0hb7SVdtr1ui9hTW/Qq1eepDVz1aZTnThEdlw2djhr70D42rxbfn2', 'true');
 
 COMMIT;
